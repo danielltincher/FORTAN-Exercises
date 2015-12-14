@@ -18,5 +18,6 @@ k = i * j
 WRITE (*,*) 'Result = ', k
 
 ! Finish up.
-STOP
+! STOP  ! This 'STOP' command is unnecessary as the compiler
+        !  will automatically add a STOP when an "End Program" is reached.
 END PROGRAM
