@@ -6,4 +6,49 @@ PROGRAM Project1_Trucks
 ! a 10% chance that any one truck will break down. Write a Fortran program to determine the
 ! probability that on a particular day four or more trucks will have broken down.
 
-! 
+IMPLICIT NONE
+
+REAL :: r
+INTEGER :: ntrial		! Number of trials for resampling
+INTEGER :: ntruck		! Number of trucks in fleet
+INTEGER :: nouttruck = 0	! Number of trucks broken down
+INTEGER :: 
+REAL :: prob4 = 0.		! Probably of greater than four trucks broken on day
+
+! .. read number of trials
+PRINT *, 'Enter number of trials'
+READ (*,*) ntrial
+PRINT *, 'Number of trials entered = ', ntrial
+! .. read number of trucks
+PRINT *, 'Enter number of trucks'
+READ (*,*) ntruck
+PRINT *, 'Number of trucks = ', ntruck
+
+DO i = 1, ntrial ! assumed increment of 1
+	
+	DO i2 = 1, ntruck
+		
+		CALL RANDUM_NUMBLER(r)		! roll the dice for truck1
+		IF ( r <= 0.1 ) THEN
+			! Add 1 to the count of broken down trucks
+			nouttruck = nouttruck + 1
+			
+		END IF
+			! Do not add to count of broken down trucks and get out
+		
+		i2 = i2 + 1
+	END DO
+
+	IF ( nouttruck >= 4 ) THEN
+	! Add 1 to the count of "meets test criteria"
+	test_crit = test_crit + 1
+END DO
+
+prob4 = test_crit /ntrial
+
+PRINT *, 'The probably that four or more trucks will be broken down is ', prob4
+
+PRINT *, 'Hit any key to end program.'
+READ (*,*)
+
+END PROGRAM
