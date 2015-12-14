@@ -21,6 +21,6 @@ WRITE (*,*) 'Result = ', k
 ! STOP  ! This 'STOP' command is unnecessary as the compiler
         !  will automatically add a STOP when an "End Program" is reached.
         
-! Add division next.
+! Add exponetiation next.
 
 END PROGRAM
