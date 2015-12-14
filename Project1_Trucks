@@ -12,7 +12,7 @@ REAL :: r
 INTEGER :: ntrial		! Number of trials for resampling
 INTEGER :: ntruck		! Number of trucks in fleet
 INTEGER :: nouttruck = 0	! Number of trucks broken down
-INTEGER :: 
+INTEGER :: test_crit = 0	! Number of samples that meet the test criteria
 REAL :: prob4 = 0.		! Probably of greater than four trucks broken on day
 
 ! .. read number of trials
