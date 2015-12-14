@@ -28,6 +28,7 @@ READ (*,*) ntruck
 PRINT *, 'Number of trucks = ', ntruck
 
 DO i = 1, ntrial ! assumed increment of 1
+	nouttruck = 0
 	DO j = 1, ntruck
 		CALL RANDOM_NUMBER(r)		! roll the dice for each truck
 		IF ( r <= pbreak ) nouttruck = nouttruck + 1
