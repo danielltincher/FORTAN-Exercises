@@ -1,0 +1,9 @@
+PROGRAM Project1_Trucks
+! This project practices the Statistical Resampling Program
+
+! Project Description:
+! You run a fleet of construction trucks. Past experience shows that on any given day there is 
+! a 10% chance that any one truck will break down. Write a Fortran program to determine the
+! probability that on a particular day four or more trucks will have broken down.
+
+! 
