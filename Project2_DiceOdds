@@ -1,0 +1,118 @@
+PROGRAM djt_diceOdds
+
+! Write a Fortran program to simulate the rolling of a specified number of dice.
+! The program must incorporate the random seed generator subprogram ranseed.f95.
+!
+! Input values are:
+! 	1.	The number of trials to be run,
+!	2.	The number of dice to be rolled,
+!	3.	The number of equal-area sides on the dice, and
+!	4.	A target sum for which the odds of rolling are to be predicted.
+!
+! For the target sum calculate
+!	1.	the probability of rolling that sum, and 
+!	2.	the probability of rolling the target sum or lower.
+!
+! Programmer: Daniell Tincher December 2015
+! Language: Fortran 95
+!
+
+IMPLICIT NONE
+
+INTEGER :: ntrials	! Number of sampling trials
+INTEGER :: ndie		! Number of dice per sample
+INTEGER	:: nsides	! Number of equal area sides on a die
+INTEGER :: target	! Target sum of rolled dice
+INTEGER :: sum		! Sample dice roll sum
+INTEGER :: ntotal	! Total number of samples that have the sum
+INTEGER :: nless	! Number of samples that have less than the sum
+INTEGER :: i		! Index name for sampling loop
+INTEGER :: j		! Index name for dice roll loop
+INTEGER :: dr		! Dice roll value
+REAL :: r			! Random number between 0 and 1
+LOGICAL :: debug = .true.	! Variable to assist with debugging
+
+! .. read number of trials
+PRINT *, 'Enter number of trials'
+READ (*,*) ntrials
+PRINT *, 'Number of trials entered = ', ntrials
+! .. read number of die per trial
+PRINT *, 'Enter number of die per trial'
+READ (*,*) ndie
+PRINT *, 'Number of die per trial entered = ', ndie
+! .. read number of sides per die
+PRINT *, 'Enter number of sides per die'
+READ (*,*) nsides
+PRINT *, 'Number of sides per die = ', nsides
+! .. read target sum of rolled dice
+PRINT *, 'Enter target sum of rolled dice'
+READ (*,*) target
+PRINT *, 'Target sum of rolled dice = ', target
+
+!.. Invoke a random seed for the random number generator
+CALL ranseed
+
+! Zero the target counters
+ntotal = 0
+nless = 0
+
+! .. Enter "i" Do Loop for sampling each trial
+DO i = 1, ntrials
+	! Zero the dice roll sum prior to each sample
+	sum = 0
+	! .. Debugging statement
+	IF ( debug ) PRINT *, ' '
+	IF ( debug ) PRINT *, 'Trial Number ', i
+	! .. Enter "j" Do Loop for rolling each die
+	DO j = 1, ndie
+		CALL RANDOM_NUMBER(r)	! to roll the die
+		dr = ceiling( nsides * r )
+		sum = sum + dr		! Count the dice values
+		IF ( debug ) PRINT *, 'Die ', j, ' Result: ', dr
+	END DO
+	IF ( sum == target ) ntotal = ntotal + 1 
+	IF ( sum <= target ) nless = nless + 1
+	!.. Debugging tool
+	IF ( debug ) PRINT *, 'Sum of dice roll ', sum
+	IF ( debug ) PRINT *, 'Number of rolls that hit target ',ntotal
+	IF ( debug ) PRINT *, 'Number of rolls hit target or less ', nless
+END DO
+PRINT *, ' '
+PRINT *, '=========== RESULTS ============= '
+PRINT *, 'The probabality of rolling the given sum is ', real(ntotal)/real(ntrials)
+PRINT *, 'The probabality of rolling the given sum or less is ', real(nless)/real(ntrials)
+PRINT *, 'Hit any key to end program.'
+READ (*,*)
+
+END PROGRAM
+
+!===================================
+subroutine ranseed
+!.. initialize random number generator
+!.. Programmer: J. G. Miller 
+
+implicit none
+
+integer, allocatable, dimension(:) :: seed
+integer :: i, n=80, clock
+character(len=8) :: date
+character(len=10) :: time, tim
+character(len=80) :: card
+
+call random_seed(size=n)
+allocate ( seed(n) )
+
+call date_and_time(date,time)
+tim = time(8:10)//time(1:6)
+write ( card,* ) tim
+read ( card,* ) clock
+
+do i = 1, n
+   seed(i) = clock + 37*(i-1)
+end do   
+
+call random_seed(put = seed)
+
+deallocate ( seed )
+
+end subroutine ranseed
