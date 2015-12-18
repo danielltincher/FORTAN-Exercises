@@ -1,0 +1,136 @@
+PROGRAM djt_p3_blackjack
+
+! Programmer: Daniell Tincher December 2015
+! Language: Fortran 95
+
+! In the game of Blackjack, also known as twenty-one, a player receives two cards 
+! dealt from a standard deck of 52 playing cards. A standard card deck is composed
+! of four different suits (spades, hearts, diamonds, and clubs) each of which contains
+! 13 cards of different rank or value. (13?4 = 52.) In the game of Blackjack, the suit
+! of the card does not matter, only its rank. The thirteen ranks are: ace, 2, 3, 4, 5, 
+! 6, 7, 8, 9, 10, jack, queen, and king. Hence, the probability of being dealt any
+! particular rank of card from a deck of 52 cards is 4/52 or 1/13.
+!
+! In casino Blackjack dealers typically deal from several standard card decks shuffled
+! together. Because the sampling population here is so large compared to the number of
+! cards dealt to a player (two), we will assume sampling with replacement. The
+! difference in the odds calculated assuming sampling with replacement and the actual
+! odds with a finite number of cards will not be significant.
+!
+! Each card of a different rank has a numerical value associated with it. The value of
+! a numbered card, that is, cards 2 through 10 inclusive, is equal to its stated
+! numerical value. The three face cards, the jack, queen, and king, are each worth 10
+! and the ace is worth 11. A player wins automatically if the sum of the numerical
+! values of the two cards from the initial deal is 21, also called Blackjack. This
+! will occur if one of the two cards is an ace and the other a 10, jack, queen or king.
+! The program must incorporate the random seed generator subprogram ranseed.f95. The
+! only input necessary is the number of trials to be run—assume one million. The
+! purpose of the program is to calculate the probability that the two cards from an
+! initial deal total 21.
+
+
+! .. Data Library
+INTEGER :: ntrials		! Number of samples for stastical sampling
+INTEGER :: ntotal		! Number of samples that meet the Blackjack condition
+INTEGER :: ncards = 2	! Number of cards per hand, Blackjack deals two initial cards
+INTEGER :: nranks = 13	! Number of uniquely ranked cards
+INTEGER :: handsum		! Sum of the dealt hand
+INTEGER :: card			! Numerical value of first dealt card
+INTEGER :: i			! Index for the sampling DO LOOP
+INTEGER :: j			! Index for the card dealing DO LOOP
+INTEGER :: blajak = 21	! Blackjack condition
+
+REAL :: r	! Real variable for the random number generator
+
+LOGICAL :: presetN = .true.	! Option to preset the number of samples
+LOGICAL :: debug = .false.		! Option to engage debugging statements
+
+!.. Option to present the number of samples to 1E6
+IF ( presetN ) THEN
+	ntrials = 1000000
+ELSE
+	! .. read number of trials
+	PRINT *, 'Enter number of trials'
+	READ (*,*) ntrials
+	PRINT *, 'Number of trials entered = ', ntrials
+END IF
+
+!.. Call ranseed subroutine to seed the random number generator
+CALL ranseed
+
+PRINT *, ' '
+PRINT *, ' ================ RESULTS ================== '
+PRINT *, ' '
+
+!.. Initialize ntotal to zero
+ntotal = 0
+
+DO i = 1, ntrials ! Sample the event ntrials number of times
+	! Initilize the sum of the hand to zero
+	IF ( debug ) THEN
+		PRINT *, '________________________'
+		PRINT *, ' '
+		PRINT *, 'Sample No. ', i
+	END IF
+	! Initialize the value of card
+	handsum = 0
+	DO j = 1, ncards ! Deal the cards loop
+		CALL RANDOM_NUMBER( r )
+		card = ceiling( nranks * r )
+		
+		IF ( debug ) THEN
+			PRINT *, 'Value of card',j,': ', card
+		END IF
+		
+		IF ( card <= 9 ) THEN
+			handsum = handsum + card + 1
+		ELSE IF ( card <= 12 ) THEN
+			handsum = handsum + 10
+		ELSE
+			handsum = handsum + 11
+		END IF
+	END DO
+	
+	IF ( debug ) THEN
+			PRINT *, 'The sum of the hand is ', handsum
+			PRINT *, '________________________'
+		END IF
+	
+	IF ( handsum == blajak ) ntotal = ntotal + 1
+END DO
+PRINT *, 'The probability of blackjack is ', real(ntotal)/real(ntrials)
+
+END PROGRAM
+
+
+
+!===================================
+subroutine ranseed
+!.. initialize random number generator
+!.. Programmer: J. G. Miller
+
+implicit none
+
+integer, allocatable, dimension(:) :: seed
+integer :: i, n=80, clock
+character(len=8) :: date
+character(len=10) :: time, tim
+character(len=80) :: card
+
+call random_seed(size=n)
+allocate ( seed(n) )
+
+call date_and_time(date,time)
+tim = time(8:10)//time(1:6)
+write ( card,* ) tim
+read ( card,* ) clock
+
+do i = 1, n
+   seed(i) = clock + 37*(i-1)
+end do   
+
+call random_seed(put = seed)
+
+deallocate ( seed )
+
+end subroutine ranseed
