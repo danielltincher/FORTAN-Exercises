@@ -1,0 +1,71 @@
+PROGRAM djt_finite_diff_reservoir
+
+! Programmer: Daniell Tincher December 2015
+! Language: Fortran 95
+
+! Two reservoirs of equal cross sectional areas (315 m2) and at equal elevations are
+! connected by a pipe of length 20 m and cross sectional area 3 m2. The reservoir on
+! the left (reservoir 1) and the connecting pipe are filled with a liquid of mass
+! density 1000 kg/m3. The pressure at the bottom of reservoir 1 (that is, p1) is
+! 39000 N/m2. The second reservoir is empty. The acceleration due to gravity is
+! 9.8 m/s2.
+!
+! The following assumptions apply. One can ignore the effects of friction, form losses
+! and the elevation differences along the path of the connecting pipe. The fluid is
+! incompressible and inviscid. Flow through the connecting pipe is started by the
+! instantaneous, full opening of the valve at the bottom of reservoir 2.
+! Using the finite difference method, write a Fortran program that predicts the behavior
+! of the system for 200 seconds following the opening of the valve. The program must read
+! the above data (with the exception of the acceleration due to gravity and problem
+! duration time of 200 seconds) from an input file and generate two output files, one that
+! summarizes the input and selected predictions, the case summary file, and a second that
+! provides selected output in tabular form for plotting, the plot file. In addition to the
+! above data, the input file must specify the case number (as described below) and the
+! time step size in seconds.
+!
+! When executed, the program shall prompt the user for the name of the input file to be
+! entered from the terminal screen, and no other data.
+!
+! The input file shall be structured as follows:
+! •	The first line describes the problem.
+! •	The second line provides the variable names of the input in the order read.
+! •	The third line provides the input data in free format, that is, each value is separated
+!	by one or more blank spaces. 
+! •	The final line provides the name of the case summary output file to be written, e.g.,
+!	out.txt.
+!
+! The name of the plot file shall be specified within the program to be identical to the
+! name of the case summary file but with the prefix plot added, e.g., plotout.txt.
+!
+! The case summary file must include the following information:
+! •	a summary of the input data values, including units of measurement,
+! •	the maximum value of the volumetric flow rate, qv, through the connecting pipe (m3/s),
+! •	the maximum depths of the water in meters in each reservoir during the transient, and
+! •	the maximum pressure at the exit of each reservoir (p1 and p2) during the transient (N/m2).
+! 
+! An example of a possible input file format follows:
+! 	Finite difference solution for reservoir case 1
+!	Input case, p1, rho, A1, A2, L, Apipe, p2, timestep_size
+!	1  39000. 1000.  315.  315.  20.  3.0  0.  0.01  
+!	rout1.txt
+!
+! The plot file shall provide in tabular form for each time step in seconds the pressures p1
+! and p2, the volumetric flow rate through the connecting pipe (m3/s), and the depth of water
+! in each reservoir in meters. Each value shall be printed in its own field with the fields
+! separated by one or more blank spaces. 
+
+!.. Data Library
+INTEGER :: kase ! Case number
+INTEGER :: 
+
+REAL :: p1, p2	! pressures at points 1 and 2, respectively, with units of N/m^
+REAL :: rho		! fluid density 
+
+
+
+
+
+
+
+
+
